@@ -8,8 +8,8 @@
         Converter = output.Converter;
     }
         
-    output.getSanitizingConverter = function () {
-        var converter = new Converter();
+    output.getSanitizingConverter = function (mode) {
+        var converter = new Converter(mode);
         converter.hooks.chain("postConversion", sanitizeHtml);
         converter.hooks.chain("postConversion", balanceTags);
         return converter;
