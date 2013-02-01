@@ -101,11 +101,12 @@ else
         }
     };
 
-    Markdown.Converter = function () {
+    Markdown.Converter = function (mode) {
         var pluginHooks = this.hooks = new HookCollection();
         pluginHooks.addNoop("plainLinkText");  // given a URL that was encountered by itself (without markup), should return the link text that's to be given to this link
         pluginHooks.addNoop("preConversion");  // called with the orignal text as given to makeHtml. The result of this plugin hook is the actual markdown source that will be cooked
         pluginHooks.addNoop("postConversion"); // called with the final cooked HTML code. The result of this plugin hook is the actual output of makeHtml
+        mode = mode ? mode : "html4";
 
         //
         // Private state of the converter instance:
@@ -717,13 +718,33 @@ else
             //  Header 2
             //  --------
             //
-            text = text.replace(/^(.+)[ \t]*\n=+[ \t]*\n+/gm,
-                function (wholeMatch, m1) { return "<h1>" + _RunSpanGamut(m1) + "</h1>\n\n"; }
-            );
+            if (mode==="html5") {
+                // HTML5 mode
+                text = text.replace(/^(.+)?\s*\n=+\s*\n+((?:.|\n)*?(?=^.*?\n=+\s*$)|(?:.|\n)*)/gm,
+                    function (wholeMatch, m1, m2) {
+                        return "<section>\n" +
+                               "  <h1>" + _RunSpanGamut(m1) + "</h1>\n" +
+                               m2 + "\n" +
+                               "</section>\n"; }
+                );
 
-            text = text.replace(/^(.+)[ \t]*\n-+[ \t]*\n+/gm,
-                function (matchFound, m1) { return "<h2>" + _RunSpanGamut(m1) + "</h2>\n\n"; }
-            );
+                text = text.replace(/^(.+)?\s*\n-+\s*\n+((?:.|\n)*?(?=^.*?\n-+\s*$)|(?:.|\n)*)/gm,
+                    function (wholeMatch, m1, m2) {
+                        return "<section>\n" +
+                               "  <h1>" + _RunSpanGamut(m1) + "</h1>\n" +
+                               m2 + "\n" +
+                               "</section>\n"; }
+                );
+            } else {
+                // Pre-HTML5 mode
+                text = text.replace(/^(.+)[ \t]*\n=+[ \t]*\n+/gm,
+                    function (matchFound, m1) { return "<h1>" + _RunSpanGamut(m1) + "</h1>\n\n"; }
+                );
+
+                text = text.replace(/^(.+)[ \t]*\n-+[ \t]*\n+/gm,
+                    function (matchFound, m1) { return "<h2>" + _RunSpanGamut(m1) + "</h2>\n\n"; }
+                );
+            }
 
             // atx-style headers:
             //  # Header 1
@@ -744,12 +765,27 @@ else
             /gm, function() {...});
             */
 
-            text = text.replace(/^(\#{1,6})[ \t]*(.+?)[ \t]*\#*\n+/gm,
-                function (wholeMatch, m1, m2) {
-                    var h_level = m1.length;
-                    return "<h" + h_level + ">" + _RunSpanGamut(m2) + "</h" + h_level + ">\n\n";
+            if (mode==="html5") {
+                var pattern = "^#{@LEVEL@}\\s*(.+?)\\s*$\\n+((?:.|\\n)*?(?=^#{1,@LEVEL@}\\s)|.*(?:.|\\n)*)";
+                for (var level=6; level>0; level--) {
+                    var matcher = new RegExp(pattern.replace(/@LEVEL@/g, level), "gm");
+                    text = text.replace(matcher,
+                        function (wholeMatch, m1, m2) {
+                            return "<section>\n" +
+                                   "  <h1>" + _RunSpanGamut(m1) + "</h1>\n" +
+                                   m2 + "\n" +
+                                   "</section>\n"; }
+                    );
                 }
-            );
+            } else {
+                // Pre-HTML5 mode
+                text = text.replace(/^(\#{1,6})[ \t]*(.+?)[ \t]*\#*\n+/gm,
+                    function (wholeMatch, m1, m2) {
+                        var h_level = m1.length;
+                        return "<h" + h_level + ">" + _RunSpanGamut(m2) + "</h" + h_level + ">\n\n";
+                    }
+                );
+            }
 
             return text;
         }
