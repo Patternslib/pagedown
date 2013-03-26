@@ -20,7 +20,7 @@
     }
 
     // (tags that can be opened/closed) | (tags that stand alone)
-    var basic_tag_whitelist = /^(<\/?(b|blockquote|code|del|dd|dl|dt|em|h1|h2|h3|i|kbd|li|ol|p|pre|s|sup|sub|strong|strike|ul)>|<(br|hr)\s?\/?>)$/i;
+    var basic_tag_whitelist = /^(<\/?(abbr|acronym|b|blockquote|bdo|big|cite|code|del|dfn|dd|dl|dt|em|h[1-6]|i|ins|kbd|li|ol|p|q|pre|s|samp|small|sup|sub|strong|strike|sub|sup|tt|u|var|bdi|bdo|ruby|rt|tp|time|wbr|ul)>|<(br|hr)\s?\/?>)$/i;
     // <a href="url..." optional title>|</a>
     var a_white = /^(<a\shref="((https?|ftp):\/\/|\/)[-A-Za-z0-9+&@#\/%?=~_|!:,.;\(\)]+"(\stitle="[^"<>]+")?\s?>|<\/a>)$/i;
 
