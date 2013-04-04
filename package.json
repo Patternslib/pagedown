@@ -1,9 +1,9 @@
 {
     "name": "pagedown",
-    "version": "1.1.0",
-    "description": "markdown converter, based on showdown",
-    "repository": { "type": "hg", "url": "https://code.google.com/p/pagedown/" },
-    "keywords": ["markdown"],
+    "version": "1.2.0",
+    "description": "Fork of the pagedown markdown renderer supporting HTML5 elements.",
+    "repository": { "type": "git", "url": "https://github.com/Patternslib/pagedown/" },
+    "keywords": ["markdown", "pagedown"],
     "license": "MIT",
     "files": ["Markdown.Converter.js", "Markdown.Sanitizer.js", "node-pagedown.js"],
     "main": "node-pagedown.js",
