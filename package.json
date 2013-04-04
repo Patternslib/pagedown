@@ -1,6 +1,6 @@
 {
     "name": "pagedown",
-    "version": "1.2.0",
+    "version": "100.1.0",
     "description": "Fork of the pagedown markdown renderer supporting HTML5 elements.",
     "repository": { "type": "git", "url": "https://github.com/Patternslib/pagedown/" },
     "keywords": ["markdown", "pagedown"],
